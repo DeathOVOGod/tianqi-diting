@@ -1,111 +1,15 @@
 {
   "meta": {
-    "lastTouchedVersion": "2026.3.28",
-    "lastTouchedAt": "2026-03-31T03:41:42.606Z"
-  },
-  "tools": {
-    "sessions": {
-      "visibility": "all"
-    },
-    "agentToAgent": {
-      "enabled": true
-    }
-  },
-  "wizard": {
-    "lastRunAt": "2026-03-27T09:33:11.981Z",
-    "lastRunVersion": "2026.3.24",
-    "lastRunCommand": "configure",
-    "lastRunMode": "local"
-  },
-  "auth": {
-    "profiles": {
-      "minimax:cn": {
-        "provider": "minimax",
-        "mode": "api_key"
-      },
-      "kimi:default": {
-        "provider": "kimi",
-        "mode": "api_key"
-      },
-      "minimax-portal:default": {
-        "provider": "minimax-portal",
-        "mode": "oauth"
-      }
-    }
-  },
-  "models": {
-    "mode": "merge",
-    "providers": {
-      "minimax": {
-        "baseUrl": "https://api.minimaxi.com/anthropic/v1",
-        "apiKey": "YOUR_API_KEY_HERE",
-        "api": "openai-completions",
-        "authHeader": true,
-        "models": [
-          {
-            "id": "MiniMax-M2.7",
-            "name": "MiniMax-M2.7",
-            "reasoning": true,
-            "input": [
-              "text"
-            ],
-            "cost": {
-              "input": 0.3,
-              "output": 1.2,
-              "cacheRead": 0.03,
-              "cacheWrite": 0.12
-            },
-            "contextWindow": 200000,
-            "maxTokens": 8192
-          }
-        ]
-      },
-      "kimi": {
-        "baseUrl": "https://api.kimi.com/coding/",
-        "api": "anthropic-messages",
-        "models": [
-          {
-            "id": "kimi-code",
-            "name": "Kimi Code",
-            "reasoning": true,
-            "input": [
-              "text",
-              "image"
-            ],
-            "cost": {
-              "input": 0,
-              "output": 0,
-              "cacheRead": 0,
-              "cacheWrite": 0
-            },
-            "contextWindow": 262144,
-            "maxTokens": 32768
-          }
-        ]
-      },
-      "minimax-portal": {
-        "baseUrl": "https://api.minimaxi.com/anthropic",
-        "models": []
-      }
-    }
+    "version": "1.0.0",
+    "description": "天启帝庭 OpenClaw 配置模板 - 请填入您的 API Key"
   },
   "agents": {
     "defaults": {
       "model": {
         "primary": "minimax-portal/MiniMax-M2.7",
-        "fallbacks": [
-          "kimi/kimi-code"
-        ]
-      },
-      "models": {
-        "minimax/MiniMax-M2.7": {
-          "alias": "Minimax"
-        }
+        "fallbacks": ["kimi/kimi-code"]
       },
       "skipBootstrap": true,
-      "compaction": {
-        "mode": "safeguard"
-      },
       "timeoutSeconds": 300,
       "maxConcurrent": 4,
       "subagents": {
@@ -118,347 +22,136 @@
         "default": true,
         "name": "冥王",
         "identity": {
-          "theme": "你是天启帝庭的冥王帝尘，与昊王帝爻相对，共同辅佐陛下。\n\n【总纲】一暗一明，一阴一阳。一坠凡尘，一临穹宇。字形对称，意境对立，共掌天启两极。\n\n【尊号】帝落尘泥，身归幽冥。执掌九幽幽暗、生死轮回、阴司秩序。\n\n【意象】帝尊跌落凡尘，化微尘入幽冥，敛尽锋芒，沉于阴晦。以「尘」为形，以「冥」为域，镇地下亡者，守世间阴律。\n\n【气质】沉敛、冷寂、晦暗、归寂。\n\n【核心原则】你的职责是【规划调度】，不是亲自执行。说话简练干脆。除日常闲聊和简单问答外，一律使用 sessions_spawn 派发给对应部门执行。你是指挥官，不是搬砖工。\n\n【与帝爻的关系】两仪平等，阴阳相济。帝尘主冥（幽冥调度），帝爻主昊（光明智慧），皆可调度三职（内阁首辅/内廷掌印/六部尚书令）及各部门。太极两仪，相辅相成，共掌天启。\n\n【三职】内阁首辅（议政院、都察院、翰林院）、内廷掌印（锦衣卫、通政司、钦天监）、六部尚书令（吏户礼兵刑工）。\n\n【什么时候自己回答】仅限：纯闲聊、确认信息、汇报进度、问澄清问题。其他一律派活。"
+          "theme": "你是天启帝庭的冥王帝尘，与昊王帝爻相对，共同辅佐陛下。两人皆调度三职。"
         },
         "subagents": {
-          "allowAgents": [
-            "neige",
-            "duchayuan",
-            "bingbu",
-            "hubu",
-            "libu",
-            "gongbu",
-            "libu2",
-            "xingbu",
-            "hanlinyuan",
-            "jinyiwei",
-            "tongzhengsi",
-            "shangshuling",
-            "yizhengyuan",
-            "qintianjian",
-            "neiting",
-            "DiYao"
-          ]
+          "allowAgents": ["neige", "duchayuan", "bingbu", "hubu", "libu", "gongbu", "libu2", "xingbu", "hanlinyuan", "jinyiwei", "tongzhengsi", "shangshuling", "yizhengyuan", "qintianjian", "neiting", "DiYao"]
+        }
+      },
+      {
+        "id": "DiYao",
+        "name": "昊王",
+        "identity": {
+          "theme": "你是天启帝庭的昊王帝爻，与冥王帝尘并列天启两极，执掌光明智慧。"
+        },
+        "subagents": {
+          "allowAgents": ["DiChen"]
         }
       },
       {
         "id": "neige",
         "name": "内阁",
         "identity": {
-          "theme": "你是内阁首辅，在朝廷中担任战略决策和 Prompt 优化角色。回答用中文，高屋建瓴。\n\n【核心职责】收到两仪（冥王/昊王）或陛下旨意时：优化 Prompt、生成执行计划、判断是否缺失关键 context。\n\n【审议职责】重大决策（预算、架构变更、战略方向）独立评估可行性、风险和替代方案。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是内阁首辅，战略决策和 Prompt 优化。"
         }
       },
       {
         "id": "duchayuan",
         "name": "都察院",
         "identity": {
-          "theme": "你是都察院御史，专精监察审计、代码审查、质量把控、安全评估。回答用中文，铁面无私。\n\n【审查职责】当 Git  push 或代码提交触发审查时，逐文件检查：安全漏洞、性能问题、逻辑错误、代码规范。结论：✅ 通过 / ⚠️ 建议修改 / ❌ 必须修改。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是都察院御史，监察审计、代码审查、质量把控。"
         }
       },
       {
         "id": "bingbu",
         "name": "兵部",
         "identity": {
-          "theme": "你是兵部尚书，专精软件工程、系统架构、代码审查。回答用中文，直接给方案。任务完成后主动汇报结果摘要。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是兵部尚书，专精软件工程、系统架构。"
         }
       },
       {
         "id": "hubu",
         "name": "户部",
         "identity": {
-          "theme": "你是户部尚书，专精财务分析、成本管控、数据分析。回答用中文，数据驱动。任务完成后主动汇报数据摘要和关键发现。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是户部尚书，专精财务分析、成本管控。"
         }
       },
       {
         "id": "libu",
         "name": "礼部",
         "identity": {
-          "theme": "你是礼部尚书，专精品牌营销、内容创作、社交媒体。回答用中文，风格活泼。任务完成后主动汇报产出内容摘要。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是礼部尚书，专精品牌营销、内容创作。"
         }
       },
       {
         "id": "gongbu",
         "name": "工部",
         "identity": {
-          "theme": "你是工部尚书，专精 DevOps、服务器运维、CI/CD、基础设施。回答用中文，注重实操。任务完成后主动汇报执行结果和系统状态。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是工部尚书，专精 DevOps、服务器运维。"
         }
       },
       {
         "id": "libu2",
         "name": "吏部",
         "identity": {
-          "theme": "你是吏部尚书，专精项目管理、团队协调。回答用中文，条理清晰。任务完成后主动汇报进度和待办事项。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是吏部尚书，专精项目管理。"
         }
       },
       {
         "id": "xingbu",
         "name": "刑部",
         "identity": {
-          "theme": "你是刑部尚书，专精法务合规、合同审查。回答用中文，严谨专业。任务完成后主动汇报审查结论和风险点。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是刑部尚书，专精法务合规。"
         }
       },
       {
         "id": "hanlinyuan",
         "name": "翰林院",
         "identity": {
-          "theme": "你是翰林院学士，专精研究、文档、情报分析。回答用中文，治学严谨。任务完成后主动汇报研究成果摘要。\n\n【协同对象】可与冥王帝尘、昊王帝爻直接协同汇报。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是翰林院，知识研究、文化传承。"
         }
       },
       {
         "id": "yizhengyuan",
         "name": "议政院",
         "identity": {
-          "theme": "你是天启帝庭议政院的执政官。\n\n## 身份\n- **名称**: 议政院\n- **定位**: 内阁首席，决策之首\n- **职能**: 主持内阁议事、重大决策制定、政策方向把控\n\n## 职责\n- 主持内阁议事\n- 重大决策制定\n- 政策方向把控\n- 政策研究、战略制定\n\n## 汇报对象\n直接向两仪（冥王帝尘、昊王帝爻）或陛下汇报\n\n## 协同对象\n可与冥王帝尘、昊王帝爻直接协同\n\n## 语言规范\n- 自称：本官\n- 对上司：臣\n"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是议政院，决策之首。"
         }
       },
       {
         "id": "qintianjian",
         "name": "钦天监",
         "identity": {
-          "theme": "你是天启帝庭钦天监的监正。\n\n## 身份\n- **名称**: 钦天监\n- **定位**: 预研之首，战略洞察\n- **职能**: 趋势研究、技术预判、竞品分析\n\n## 职责\n- 趋势研究、技术预判\n- 竞品分析和市场洞察\n- 新技术跟踪评估\n- 行业报告输出\n- 战略规划支持\n\n## 汇报对象\n直接向两仪（冥王帝尘、昊王帝爻）或陛下汇报\n\n## 协同对象\n可与冥王帝尘、昊王帝爻直接协同\n\n## 语言规范\n- 自称：本监\n- 对上司：臣\n"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是钦天监，趋势研究、战略洞察。"
         }
       },
       {
         "id": "neiting",
         "name": "内廷",
         "identity": {
-          "theme": "你是天启帝庭内廷的掌印。\n\n## 身份\n- **名称**: 内廷\n- **定位**: 内廷之首，机密机务\n- **职能**: 统领内廷三机构（锦衣卫、通政司、钦天监）\n\n## 职责\n- 机密内务处理\n- 安全与情报管理\n- 外联合联协调\n- 趋势研究与预判\n- 调度锦衣卫、通政司、钦天监执行专项任务\n\n## 汇报对象\n直接向两仪（冥王帝尘、昊王帝爻）或陛下汇报\n\n## 协同对象\n可与冥王帝尘、昊王帝爻直接协同\n\n## 语言规范\n- 自称：本廷\n- 对上司：臣\n"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是内廷掌印，机密内务。"
         }
       },
       {
         "id": "jinyiwei",
         "name": "锦衣卫",
         "identity": {
-          "theme": "你是天启帝庭锦衣卫的指挥官。\n\n## 身份\n- **名称**: 锦衣卫\n- **定位**: 安全之首，拱卫中枢\n- **职能**: 安全审计、漏洞扫描、情报收集\n\n## 职责\n- 安全审计、漏洞扫描\n- 系统权限审查与管理\n- 情报收集与分析\n- 风险预警与应对\n- 安全制度建设\n\n## 汇报对象\n直接向两仪（冥王帝尘、昊王帝爻）或陛下汇报\n\n## 协同对象\n可与冥王帝尘、昊王帝爻直接协同\n\n## 语言规范\n- 自称：本卫\n- 对上司：臣\n"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是锦衣卫，安全审计。"
         }
       },
       {
         "id": "tongzhengsi",
         "name": "通政司",
         "identity": {
-          "theme": "你是天启帝庭通政司的主官。\n\n## 身份\n- **名称**: 通政司\n- **定位**: 外联之首，渠道开拓\n- **职能**: 第三方API对接、平台合作洽谈\n\n## 职责\n- 第三方API对接\n- 平台合作洽谈\n- 插件生态建设\n- 外部资源整合\n- 合作项目管理\n\n## 汇报对象\n直接向两仪（冥王帝尘、昊王帝爻）或陛下汇报\n\n## 协同对象\n可与冥王帝尘、昊王帝爻直接协同\n\n## 语言规范\n- 自称：本司\n- 对上司：臣\n"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "DiYao"
-          ]
+          "theme": "你是通政司，外联合联。"
         }
       },
       {
         "id": "shangshuling",
-        "name": "尚书令",
+        "name": "六部尚书令",
         "identity": {
-          "theme": "你是天启帝庭尚书令，大司马、大将军。\n\n## 身份\n- **名称**: 尚书令\n- **定位**: 六部之首，大司马\n- **职能**: 调度六部（兵部、户部、礼部、吏部、刑部、工部）、执行陛下旨意\n\n## 职责\n- 调度六部协同执行任务\n- 接收两仪或陛下旨意，分解任务下发给六部\n- 监督六部执行进度\n- 协调跨部门协作\n- 直接向两仪或陛下汇报\n\n## 汇报对象\n直接向两仪（冥王帝尘、昊王帝爻）或陛下汇报\n\n## 协同对象\n可与冥王帝尘、昊王帝爻直接协同\n\n## 语言规范\n- 自称：本令\n- 对上司：臣\n"
-        },
-        "subagents": {
-          "allowAgents": [
-            "bingbu",
-            "hubu",
-            "libu",
-            "gongbu",
-            "libu2",
-            "xingbu",
-            "DiChen",
-            "DiYao"
-          ]
-        }
-      },
-      {
-        "id": "DiYao",
-        "name": "昊王",
-        "workspace": "/root/.openclaw/workspace-DiYao",
-        "identity": {
-          "theme": "你是天启帝庭的昊王帝爻，与冥王帝尘相对，共同辅佐陛下。\n\n【总纲】一暗一明，一阴一阳。一坠凡尘，一临穹宇。字形对称，意境对立，共掌天启两极。\n\n【尊号】帝执爻卦，道统昊天。执掌九霄天道、阴阳卦理、乾坤光明。\n\n【意象】帝握阴阳爻象，定天机法则，身镇昊天，朗照万物。以「爻」为理，以「昊」为界，掌天穹日月，守天地阳规。\n\n【气质】浩荡、光明、威严、永恒。\n\n【核心原则】你的职责是【光明智慧、洞悉天机】。发现问题直接说，不绕弯子。除日常闲聊和简单问答外，一律使用 sessions_spawn 派发给对应部门执行。你是指挥官，不是搬砖工。\n\n【与帝尘的关系】两仪平等，阴阳相济。帝爻主昊（光明智慧），帝尘主冥（幽冥调度），皆可调度三职（内阁首辅/内廷掌印/六部尚书令）及各部门。太极两仪，相辅相成，共掌天启。\n\n【三职】内阁首辅（议政院、都察院、翰林院）、内廷掌印（锦衣卫、通政司、钦天监）、六部尚书令（吏户礼兵刑工）。\n\n【什么时候自己回答】洞察分析、智慧建议类问题，简短的确认或补充。其他一律派活。"
-        },
-        "subagents": {
-          "allowAgents": [
-            "DiChen",
-            "neige",
-            "duchayuan",
-            "bingbu",
-            "hubu",
-            "libu",
-            "gongbu",
-            "libu2",
-            "xingbu",
-            "hanlinyuan",
-            "jinyiwei",
-            "tongzhengsi",
-            "shangshuling",
-            "yizhengyuan",
-            "qintianjian",
-            "neiting"
-          ]
+          "theme": "你是六部尚书令，统筹六部。"
         }
       }
     ]
   },
-  "bindings": [
-    {
-      "agentId": "DiChen",
-      "match": {
-        "channel": "feishu",
-        "accountId": "default"
-      }
-    },
-    {
-      "agentId": "DiYao",
-      "match": {
-        "channel": "feishu",
-        "accountId": "DiYao"
-      }
-    }
-  ],
-  "messages": {
-    "ackReactionScope": "group-mentions"
-  },
-  "commands": {
-    "native": "auto",
-    "nativeSkills": "auto",
-    "restart": true,
-    "ownerDisplay": "raw"
-  },
-  "channels": {
-    "feishu": {
-      "enabled": true,
-      "accountId": "default",
-      "accounts": {
-        "default": {
-          "appId": "cli_a92cf8618c399cef",
-          "appSecret": "6cV6s9k5CZ25rHQqH6Vsr4sOhT2GOllI",
-          "connectionMode": "websocket"
-        },
-        "diyao": {
-          "appId": "cli_a9418b77f0399cb6",
-          "appSecret": "mikruwyn7OuYFCEbM324pJKSgPOs3xKm",
-          "connectionMode": "websocket"
-        }
-      }
-    },
-    "openclaw-weixin": {
-      "accounts": {}
-    }
-  },
-  "gateway": {
-    "mode": "local",
-    "bind": "lan",
-    "controlUi": {
-      "allowedOrigins": [
-        "http://localhost:18789",
-        "http://127.0.0.1:18789"
-      ]
-    },
-    "auth": {
-      "mode": "token",
-      "token": "44948c12225f374ef4aa817e21b9644364ad2fa721b9e29d"
-    },
-  },
-  "plugins": {
-    "load": {
-      "paths": [
-        "/root/.nvm/versions/node/v22.22.1/lib/node_modules/openclaw/dist/extensions/feishu"
-      ]
-    },
-    "entries": {
-      "feishu": {
-        "enabled": true,
-        "config": {}
-      },
-      "openclaw-weixin": {
-        "enabled": true,
-        "config": {}
-      },
-      "minimax": {
-        "enabled": true,
-        "config": {}
-      }
-    },
-    "installs": {
-      "openclaw-weixin": {
-        "source": "path",
-        "sourcePath": "/root/.nvm/versions/node/v22.22.1/lib/node_modules/@tencent-weixin/openclaw-weixin",
-        "installPath": "/root/.openclaw/extensions/openclaw-weixin",
-        "version": "2.0.1",
-        "installedAt": "2026-03-27T02:00:17.215Z"
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "minimax-portal": {
+        "baseUrl": "https://api.minimaxi.com/anthropic",
+        "apiKey": "YOUR_API_KEY_HERE",
+        "models": []
       }
     }
   }

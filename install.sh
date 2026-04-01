@@ -71,19 +71,19 @@ else
 fi
 
 # 4. 创建 Agent 工作区
-log "[4/8] 创建 18 个 Agent 工作区..."
+log "[4/8] 创建 Agent 工作区..."
 
-# 独立 Agent（两仪）
-for agent in "workspace" "workspace-DiYao"; do
-    mkdir -p "$HOME/.$agent"
-    log "创建 $HOME/.$agent"
-done
+# OpenClaw 主工作区（帝尘）
+mkdir -p "$HOME/.openclaw/workspace"
+log "创建 $HOME/.openclaw/workspace"
 
-# 子 Agent 工作区
+# 帝爻工作区
+mkdir -p "$HOME/.openclaw/workspace-DiYao"
+log "创建 $HOME/.openclaw/workspace-DiYao"
+
+# 子 Agent 工作区（全部在 ~/.openclaw/ 下）
 AGENTS=(
     "workspace-neige:内阁"
-    "workspace-DiYao:昊王"
-    "workspace-DiChen:冥王"
     "workspace-duchayuan:都察院"
     "workspace-bingbu:兵部"
     "workspace-hubu:户部"
@@ -103,20 +103,23 @@ AGENTS=(
 for entry in "${AGENTS[@]}"; do
     dir="${entry%%:*}"
     name="${entry##*:}"
-    mkdir -p "$HOME/.$dir"
-    log "创建 $HOME/.$dir ($name)"
+    mkdir -p "$HOME/.openclaw/$dir"
+    log "创建 $HOME/.openclaw/$dir ($name)"
 done
 
 # 5. 复制 Agent 配置文件
 log "[5/8] 部署 Agent 配置文件..."
 
-# 复制到各自工作区
-cp "$(dirname "$0")/SOUL.md" "$HOME/.workspace/SOUL.md" 2>/dev/null || true
-cp "$(dirname "$0")/IDENTITY.md" "$HOME/.workspace/IDENTITY.md" 2>/dev/null || true
-cp "$(dirname "$0")/AGENT.md" "$HOME/.workspace/AGENT.md" 2>/dev/null || true
-cp "$(dirname "$0")/SOUL_DiYao.md" "$HOME/.workspace-DiYao/SOUL.md" 2>/dev/null || true
-cp "$(dirname "$0")/IDENTITY_DiYao.md" "$HOME/.workspace-DiYao/IDENTITY.md" 2>/dev/null || true
-cp "$(dirname "$0")/AGENT_DiYao.md" "$HOME/.workspace-DiYao/AGENT.md" 2>/dev/null || true
+# 复制到帝尘工作区
+cp "$(dirname "$0")/SOUL.md" "$HOME/.openclaw/workspace/SOUL.md" 2>/dev/null || true
+cp "$(dirname "$0")/IDENTITY.md" "$HOME/.openclaw/workspace/IDENTITY.md" 2>/dev/null || true
+cp "$(dirname "$0")/AGENT.md" "$HOME/.openclaw/workspace/AGENT.md" 2>/dev/null || true
+
+# 复制到帝爻工作区
+cp "$(dirname "$0")/SOUL_DiYao.md" "$HOME/.openclaw/workspace-DiYao/SOUL.md" 2>/dev/null || true
+cp "$(dirname "$0")/IDENTITY_DiYao.md" "$HOME/.openclaw/workspace-DiYao/IDENTITY.md" 2>/dev/null || true
+cp "$(dirname "$0")/AGENT_DiYao.md" "$HOME/.openclaw/workspace-DiYao/AGENT.md" 2>/dev/null || true
+
 log "Agent 配置文件已部署"
 
 # 6. 安装 Skills
@@ -140,15 +143,8 @@ fi
 log "[7/8] 部署核心配置文件..."
 for f in SOUL.md IDENTITY.md AGENT.md AGENTS.md MEMORY.md BOOTSTRAP.md TOOLS.md USER.md; do
     if [ -f "$(dirname "$0")/$f" ]; then
-        cp "$(dirname "$0")/$f" "$HOME/.workspace/$f"
+        cp "$(dirname "$0")/$f" "$HOME/.openclaw/workspace/$f"
         log "部署 $f"
-    fi
-done
-for f in SOUL.md IDENTITY.md AGENT.md; do
-    if [ -f "$(dirname "$0")/$f" ]; then
-        dest="$HOME/.workspace-DiYao/${f%.md}-DiChen${f##*.md}"
-        [ "$f" = "SOUL.md" ] && dest="$HOME/.workspace-DiYao/SOUL.md"
-        [ "$f" = "IDENTITY.md" ] && dest="$HOME/.workspace-DiYao/IDENTITY.md"
     fi
 done
 
