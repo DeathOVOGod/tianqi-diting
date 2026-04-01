@@ -454,7 +454,7 @@
       <div class="nav-top">
         <div class="brand" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
           <div style="font-size: 28px;white-space:nowrap;">👑 天启帝庭</div>
-          <div style="font-size: 13px;color:var(--text-secondary);letter-spacing:3px;white-space:nowrap;">司礼监监控中心</div>
+          <div style="font-size: 13px;color:var(--text-secondary);letter-spacing:3px;white-space:nowrap;">天启两极 · 执掌阴阳</div>
         </div>
         <!-- 陛下下旨 -->
         <div class="emperor-command-bar">
@@ -468,9 +468,8 @@
       </div>
       <!-- 第二行：导航链接 -->
       <div class="nav-links">
-        <a href="#" class="nav-link" data-page="court">🏛️ 朝堂</a>
         <a href="#" class="nav-link" data-page="shengting">🏯 圣庭</a>
-        <a href="#" class="nav-link" data-page="home">🏛️ 司礼监大殿</a>
+        <a href="#" class="nav-link active" data-page="home">⚖️ 阴阳两极</a>
         <a href="#" class="nav-link" data-page="cabinet">📜 内阁</a>
         <a href="#" class="nav-link" data-page="inner">🏛️ 内廷</a>
         <a href="#" class="nav-link" data-page="ministries">📋 六部尚书堂</a>
@@ -480,17 +479,23 @@
       </div>
     </nav>
 
-    <!-- 司礼监大殿 -->
+    <!-- 阴阳两极 -->
     <div id="page-home" class="page">
-      <h1 class="page-title home-title">司礼监大殿</h1>
+      <h1 class="page-title home-title">阴阳两极</h1>
       <div class="card-grid home-grid">
         <div class="card hero-card home-hero">
-          <div class="card-title" style="font-size: 22px;margin-bottom:16px;"><span class="icon" style="font-size: 28px;">⚔️</span> 司礼监 · 帝尘</div>
+          <div class="card-title" style="font-size: 22px;margin-bottom:16px;"><span class="icon" style="font-size: 28px;">⚔️</span> 冥王 · 帝尘</div>
           <div class="data-item"><span class="data-label">称号</span><span class="data-value">帝尘·冥王</span></div>
-          <div class="data-item"><span class="data-label">定位</span><span class="data-value">调度总管 · 统领全廷</span></div>
-          <div class="data-item"><span class="data-label">职责</span><span class="data-value">接收陛下旨意、任务分配、进度跟踪</span></div>
-          <div class="data-item"><span class="data-label">职责</span><span class="data-value">协调跨部门、实时汇报、重大裁决</span></div>
-          <div class="data-item"><span class="data-label">位置</span><span class="data-value">陛下C位之下 · 群臣之上</span></div>
+          <div class="data-item"><span class="data-label">定位</span><span class="data-value">天启阴面 · 幽冥秩序</span></div>
+          <div class="data-item"><span class="data-label">职责</span><span class="data-value">GitHub上传、平台运营、安全情报、dispatch</span></div>
+          <div class="data-item"><span class="data-label">位置</span><span class="data-value">陛下左翼 · 天启阴面</span></div>
+        </div>
+        <div class="card hero-card home-hero">
+          <div class="card-title" style="font-size: 22px;margin-bottom:16px;"><span class="icon" style="font-size: 28px;">☀️</span> 昊王 · 帝爻</div>
+          <div class="data-item"><span class="data-label">称号</span><span class="data-value">帝爻·昊王</span></div>
+          <div class="data-item"><span class="data-label">定位</span><span class="data-value">天启阳面 · 光与智</span></div>
+          <div class="data-item"><span class="data-label">职责</span><span class="data-value">策略制定、代码审查、脱敏校验、深度分析</span></div>
+          <div class="data-item"><span class="data-label">位置</span><span class="data-value">陛下右翼 · 天启阳面</span></div>
         </div>
         <div class="card">
           <div class="card-title"><span class="icon">🖥️</span> 系统负载</div>
@@ -555,8 +560,32 @@
       </div>
 
       <!-- 实时监控区域 -->
+      <!-- DEBUG: 直接调用API验证 -->
+      <div id="debug-panel" style="background:#0a0a0f;padding:16px;margin-bottom:20px;border-radius:8px;border:2px solid #d4af37;">
+        <div style="color:#d4af37;font-weight:bold;margin-bottom:10px;font-size:16px;">🐛 实时数据调试面板</div>
+        <div style="color:#4ade80;font-size:14px;margin:4px 0;" id="debug-status">诊断中...</div>
+        <div style="color:#fbbf24;font-size:13px;margin:4px 0;" id="debug-sessions">Sessions: -</div>
+        <div style="color:#60a5fa;font-size:13px;margin:4px 0;" id="debug-network">Network: -</div>
+        <div style="color:#a78bfa;font-size:13px;margin:4px 0;" id="debug-chart">Chart: -</div>
+      </div>
+      <script>
+        // 实时调试面板：等页面完全加载后再检测
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            var chartEl = document.getElementById('debug-chart');
+            if (!chartEl) return;
+            function log(el, color, msg) { el.textContent = msg; el.style.color = color; }
+            // Chart 检测
+            if (typeof cpuMemChart !== 'undefined' && cpuMemChart !== null) {
+              log(chartEl, '#a78bfa', '✅ cpuMemChart OK: ' + typeof cpuMemChart);
+            } else {
+              log(chartEl, '#f87171', '⚠️ cpuMemChart 未就绪（chart初始化中...）');
+            }
+          }, 2000); // 等2秒让 initCpuMemChart 执行完毕
+        }, { once: true });
+      </script>
       <div class="monitoring-section">
-        <div class="section-label">实时监控</div>
+        <div class="section-label">实时监控 <span id="poll-beat" style="font-size:11px;color:#4ade80;margin-left:8px;">LIVE</span></div>
         <div class="monitoring-grid">
           <!-- CPU/内存趋势图 -->
           <div class="card chart-card">
@@ -717,7 +746,7 @@
     </div>
 
     <!-- 朝堂 -->
-    <div id="page-court" class="page active">
+    <div id="page-home" class="page active">
       <div id="court-members"><div class="loading">加载中...</div></div>
       <div class="timestamp">最后更新: <span id="court-updated">-</span></div>
     </div>
@@ -928,11 +957,15 @@
     }
 
     async function pollMonitoringData() {
+      try {
       const [status, sessions, network] = await Promise.all([
         fetchAPI('/api/status'),
         fetchAPI('/api/sessions'),
         fetchAPI('/api/network')
       ]);
+      // 可视化心跳：更新一个可见时间戳
+      const beatEl = document.getElementById('poll-beat');
+      if (beatEl) beatEl.textContent = new Date().toLocaleTimeString('zh-CN',{hour12:false});
 
       const now = new Date();
       const timeLabel = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -961,19 +994,14 @@
       // 更新任务列表
       const sessionEl = document.getElementById('session-list');
       if (sessionEl) {
-        if (sessions && sessions.sessions && sessions.sessions.length > 0) {
+        const raw = sessions && (sessions.sessions || sessions);
+        if (raw && raw.length > 0) {
           let html = '';
-          sessions.sessions.slice(0, 20).forEach(s => {
+          raw.slice(0, 20).forEach(function(s) {
             const name = s.name || s.task || s.id || '未知任务';
             const status2 = s.status || s.state || 'running';
-            const dotClass = status2 === 'running' || status2 === 'active' ? 'success' : 'warning';
-            html += `<div class="session-item">
-              <span class="session-name">${name}</span>
-              <span class="session-status">
-                <span class="status-dot ${dotClass}"></span>
-                <span style="color:var(--text-secondary);font-size: 11px;">${status2}</span>
-              </span>
-            </div>`;
+            const dotClass = (status2 === 'running' || status2 === 'active') ? 'success' : 'warning';
+            html += '<div class="session-item"><span class="session-name">' + name + '</span><span class="session-status"><span class="status-dot ' + dotClass + '"></span><span style="color:var(--text-secondary);font-size:11px;">' + status2 + '</span></span></div>';
           });
           sessionEl.innerHTML = html;
         } else {
@@ -990,15 +1018,30 @@
           if (v >= 1e3) return (v / 1e3).toFixed(2) + ' K/s';
           return v.toFixed(0) + ' B/s';
         };
+        // 兼容API返回的speed.eth1.rxBps格式
+        const eth1 = network.speed && network.speed.eth1;
+        const uploadSpeed = eth1 ? (eth1.txBps || 0) : 0;
+        const downloadSpeed = eth1 ? (eth1.rxBps || 0) : 0;
+        // 总流量从interfaces累加
+        let totalUp = 0, totalDown = 0;
+        if (network.interfaces) {
+          network.interfaces.forEach(i => {
+            if (i.name !== 'lo') {
+              totalUp += i.txBytes || 0;
+              totalDown += i.rxBytes || 0;
+            }
+          });
+        }
         const upEl = document.getElementById('net-upload');
-        if (upEl) upEl.textContent = fmtSpeed(network.uploadSpeed || network.upload_speed || 0);
+        if (upEl) upEl.textContent = fmtSpeed(uploadSpeed);
         const dnEl = document.getElementById('net-download');
-        if (dnEl) dnEl.textContent = fmtSpeed(network.downloadSpeed || network.download_speed || 0);
+        if (dnEl) dnEl.textContent = fmtSpeed(downloadSpeed);
         const tuEl = document.getElementById('net-total-up');
-        if (tuEl) tuEl.textContent = fmtSpeed(network.totalUpload || network.total_upload || 0);
+        if (tuEl) tuEl.textContent = fmtSpeed(totalUp);
         const tdEl = document.getElementById('net-total-down');
-        if (tdEl) tdEl.textContent = fmtSpeed(network.totalDownload || network.total_download || 0);
+        if (tdEl) tdEl.textContent = fmtSpeed(totalDown);
       }
+      } catch(e) { console.error('pollMonitoringData error:', e); }
     }
 
     // 启动图表与轮询
@@ -1586,7 +1629,7 @@
     pollCommands();
 
     // 初始加载
-    loadCourtData();
+    loadHomeData();
     // 每30秒刷新
-    setInterval(() => { loadPageData(document.querySelector('.page.active')?.id.replace('page-', '') || 'court'); }, 30000);
+    setInterval(() => { loadPageData(document.querySelector('.page.active')?.id.replace('page-', '') || 'home'); }, 30000);
   </script>
