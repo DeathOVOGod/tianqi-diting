@@ -2,6 +2,8 @@
 天启两极，执掌阴阳。昊天之光，照临万物。
 基于 OpenClaw 框架构建的多 Agent 协作系统。以天启宇宙为意象，双极协同：昊王执掌天道光明，冥王司掌幽冥秩序。一阴一阳，一明一暗，共掌天启。
 灵感来源：当皇上 × OpenClaw（https://github.com/wanikua/danghuangshang，MIT License）
+![Uploading img_v3_0210b_2412e168-5fed-42b1-8bd6-50e1a61c54bg.jpg…]()
+
 ───
 🎯 天启两极
 | 殿阁    | 执掌             | 气质       |
