@@ -1,0 +1,32 @@
+{
+  "name": "feishu-doc-writer",
+  "description": "飞书云文档一站式创作工具，支持创建文档、Markdown转换、丰富模板、批量生成，适合会议纪要、周报、项目文档等场景",
+  "version": "1.0.0",
+  "author": "小鳌",
+  "license": "MIT",
+  "trigger": ["飞书文档", "文档写作", "Markdown转换", "会议纪要", "周报生成"],
+  "category": ["办公与效率"],
+  "tags": ["飞书","文档","写作","Markdown","模板","会议纪要","周报"],
+  "dependencies": {
+    "python": ">=3.8",
+    "packages": ["requests"]
+  },
+  "env": {
+    "FEISHU_APP_ID": {
+      "description": "飞书应用ID",
+      "required": true
+    },
+    "FEISHU_APP_SECRET": {
+      "description": "飞书应用密钥",
+      "required": true
+    }
+  },
+  "entry": "scripts/doc_writer.py",
+  "functions": [
+    "create_doc",
+    "write_content",
+    "write_markdown",
+    "create_from_template",
+    "batch_generate"
+  ]
+}

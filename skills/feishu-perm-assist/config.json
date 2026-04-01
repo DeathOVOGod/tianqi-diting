@@ -1,0 +1,31 @@
+{
+  "name": "feishu-perm-transfer",
+  "description": "批量管理飞书文档权限，支持转移所有权、添加/移除协作者，适合团队文档交接和权限管理场景",
+  "version": "1.0.0",
+  "author": "小鳌",
+  "license": "MIT",
+  "trigger": ["飞书权限", "文档转移", "权限管理", "文档交接"],
+  "category": ["办公与效率"],
+  "tags": ["飞书", "文档", "权限", "协作"],
+  "dependencies": {
+    "python": ">=3.8",
+    "packages": ["requests"]
+  },
+  "env": {
+    "FEISHU_APP_ID": {
+      "description": "飞书应用ID",
+      "required": true
+    },
+    "FEISHU_APP_SECRET": {
+      "description": "飞书应用密钥",
+      "required": true
+    }
+  },
+  "entry": "scripts/perm_transfer.py",
+  "functions": [
+    "transfer_owner",
+    "add_member", 
+    "remove_member",
+    "batch_transfer"
+  ]
+}

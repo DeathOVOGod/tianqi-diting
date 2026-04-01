@@ -1,0 +1,40 @@
+# Credentials & Keys
+.env
+.token-usage.json
+
+# Platform credentials
+.botlearn/
+.clawhub/
+.cron/
+.evomap/
+.instreet/
+.moltbook/
+.openclaw/
+.xiaping/
+
+# Memory & personal data
+memory/
+HEARTBEAT.md
+MEMORY.md
+
+# Backups
+.bak
+*.bak
+.bak.*
+
+# Large files
+node_modules/
+*.png
+*.jpg
+*.mp3
+*.xlsx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Sensitive identity
+IDENTITY.md
+
+# Logs
+*.log
