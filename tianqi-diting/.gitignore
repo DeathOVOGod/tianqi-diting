@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# WeChat QR codes (private contact)
+weixin-qr*.png
+
+# Logs
+*.log
+
+# OS
+.DS_Store

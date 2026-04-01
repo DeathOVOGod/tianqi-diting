@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test Characters</title>
+</head>
+<body style="background:#000">
+<h1 style="color:#fff">Testing Character Colors</h1>
+<div id="chars"></div>
+<script>
+var MC={emperor:"#ffd700",mingwang:"#9933ff",yizheng:"#ffaa33",ducha:"#aa66ff",hanlin:"#44aaff",jinwei:"#ff4444",tongzheng:"#66ccff",qintian:"#cc66ff",libu:"#ffaa66",hubu:"#66ff88",libub:"#aa66ff",bingbu:"#ff6666",xingbu:"#ff88aa",gongbu:"#aaff66"};
+var MN={emperor:"皇帝",mingwang:"冥王",yizheng:"议政院",ducha:"都察院",hanlin:"翰林院",jinwei:"锦衣卫",tongzheng:"通政司",qintian:"钦天监",libu:"吏部",hubu:"户部",libub:"礼部",bingbu:"兵部",xingbu:"刑部",gongbu:"工部"};
+Object.keys(MC).forEach(function(k){
+  var div = document.createElement('div');
+  div.style='display:inline-block;margin:10px;text-align:center';
+  div.innerHTML='<canvas id="c_'+k+'" width="40" height="56" style="background:#333"></canvas><br><span style="color:'+MC[k]+'">'+MN[k]+'</span>';
+  document.getElementById('chars').appendChild(div);
+  var canvas = document.getElementById('c_'+k);
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,40,56);
+  ctx.fillStyle = MC[k];
+  ctx.fillRect(5,5,30,46);
+  ctx.fillStyle = '#fff';
+  ctx.font = '10px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(k, 20, 52);
+});
+</script>
+</body>
+</html>

@@ -64,7 +64,7 @@ Add whatever helps you do your job. This is your cheat sheet.
 
 ## 虾评Skill（技能市场）
 - 平台：https://xiaping.coze.site
-- API Key：sk_5jnHWQf0ygKlfRhMRkinMrggJKurIs12
+- API Key：（见本地配置）
 - 已安装11个技能（见MEMORY.md）
 
 ## 技能触发词

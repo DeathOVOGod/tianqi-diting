@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天启帝庭 · 乾清宫</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050508;display:flex;flex-direction:column;align-items:center;min-height:100vh;font-family:"Courier New",monospace;overflow-x:hidden;color:#f0e6d3}
+:root{--gold:#ffd700;--gold-dark:#a07800;--gold-dim:#3a2a00;--panel-bg:rgba(6,6,16,0.95);--border-gold:rgba(255,215,0,0.2)}
+#banner{width:100%;max-width:1280px;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#180808 0%,#0c0404 100%);border-bottom:2px solid var(--gold-dark);position:relative;z-index:10}
+.banner-title{display:flex;align-items:center;gap:12px}
+.dragon-glyph{font-size:24px;animation:pulse-glow 2.5s ease-in-out infinite}
+@keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 4px #ffd700)}50%{filter:drop-shadow(0 0 16px #ffd700)}}
+.banner-title h1{color:var(--gold);font-size:18px;letter-spacing:6px;text-shadow:0 0 16px rgba(255,215,0,0.35)}
+.banner-title .sub{color:#6a5a4a;font-size:9px;letter-spacing:2px}
+.banner-right{display:flex;gap:12px;align-items:center}
+.stat-chip{background:rgba(255,215,0,0.06);border:1px solid var(--border-gold);padding:3px 10px;border-radius:3px;font-size:10px;color:#a09060}
+.stat-chip span{color:var(--gold);font-size:12px}
+#stage{position:relative;width:1280px;height:700px;max-width:100vw;overflow:hidden;border:2px solid var(--gold-dim);border-top:none}
+#palace-canvas{position:absolute;inset:0;width:100%;height:100%}
+.official{position:absolute;z-index:20;cursor:pointer;display:flex;flex-direction:column;align-items:center}
+.official .char-canvas{image-rendering:pixelated;display:block}
+.official .bubble{background:#fdf5dc;color:#1a0a00;border:2px solid var(--gold-dark);padding:5px 10px;border-radius:4px;font-size:10px;white-space:nowrap;position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);z-index:60;opacity:1}
+.official .tooltip-card{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--panel-bg);border:2px solid var(--gold-dark);border-radius:5px;padding:8px 12px;min-width:140px;opacity:1;z-index:70;text-align:center}
+.tooltip-card .t-name{color:var(--gold);font-size:12px;letter-spacing:2px}
+.tooltip-card .t-title{color:#8a7a6a;font-size:9px;margin:2px 0}
+.tooltip-card .t-dept{color:#7a8aaa;font-size:9px}
+#bottom-panels{width:1280px;max-width:100vw;display:flex;gap:10px;padding:8px 0 16px;flex-wrap:wrap;justify-content:center}
+.panel{background:var(--panel-bg);border:1px solid var(--border-gold);border-radius:5px;padding:10px 14px;min-width:300px}
+.panel-header{color:var(--gold);font-size:10px;letter-spacing:2px;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid rgba(255,215,0,0.1);display:flex;align-items:center;gap:6px}
+.panel-body{display:flex;flex-direction:column;gap:2px;max-height:100px;overflow-y:auto}
+.panel-body::-webkit-scrollbar{width:3px}.panel-body::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+.cmd-item{display:flex;align-items:flex-start;gap:6px;font-size:10px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.cmd-item .cmd-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:3px;background:var(--gold-dark)}
+.cmd-item.sent .cmd-dot{background:#5a9a5a}.cmd-item.failed .cmd-dot{background:#aa4444}
+.cmd-item .cmd-time{color:#4a3a2a;flex-shrink:0;font-size:9px}
+.cmd-item .cmd-text{color:#c9b896}.cmd-item.sent .cmd-text{color:#8ac88a}.cmd-item.failed .cmd-text{color:#cc6666}
+.sys-stat{display:flex;justify-content:space-between;align-items:center;font-size:10px;padding:2px 0;gap:8px}
+.sys-stat .label{color:#6a5a4a;flex-shrink:0}
+.sys-stat .value{color:var(--gold);flex-shrink:0}
+.sys-stat .bar-wrap{width:60px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;flex-shrink:0}
+.sys-stat .bar{height:100%;background:linear-gradient(90deg,#5a9a5a,var(--gold));border-radius:2px;transition:width 0.8s}
+.m-ministry{display:flex;align-items:center;gap:8px;font-size:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.m-ministry .m-icon{font-size:14px}
+.m-ministry .m-name{color:var(--gold);flex:1;text-align:left}
+.m-ministry .m-official{color:#8a7a6a;font-size:9px}
+</style>
+</head>
+<body>
+<div id="banner">
+  <div class="banner-title"><span class="dragon-glyph">🐉</span><div><h1>乾清宫</h1><div class="sub">天启帝庭 · 早朝议政</div></div></div>
+  <div class="banner-right"><div class="stat-chip">帝庭 <span id="current-status-text">—</span></div><div class="stat-chip" id="clock">—</div></div>
+</div>
+<div id="stage">
+  <canvas id="palace-canvas" width="1280" height="700"></canvas>
+  <div id="throne-glow" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:220px;height:220px;background:radial-gradient(ellipse,rgba(255,215,0,0.15) 0%,transparent 65%);pointer-events:none;z-index:5;animation:throne-glow 3s ease-in-out infinite"></div>
+
+  <!-- 陛下 - 坐在龙椅前方 -->
+  <div class="official" id="off-emperor" style="left:612px;top:100px"><canvas class="char-canvas" width="56" height="76"></canvas><div class="bubble">👑 神帝陛下</div><div class="tooltip-card"><div class="t-name">神帝陛下</div><div class="t-title">天子 · 天下共主</div><div class="t-dept">🐉 乾清宫 · 龙椅</div></div></div>
+
+  <!-- 冥王 -->
+  <div class="official" id="off-mingwang" style="left:680px;top:170px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">⚫ 冥王帝尘</div><div class="tooltip-card"><div class="t-name">冥王帝尘</div><div class="t-title">幽冥至尊 · 司礼监掌印</div><div class="t-dept">⚫ 司礼监</div></div></div>
+
+  <!-- 内阁首辅 -->
+  <div class="official" id="off-neige" style="left:230px;top:160px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">⏳ 内阁首辅</div><div class="tooltip-card"><div class="t-name">内阁首辅</div><div class="t-title">内阁总负责人</div><div class="t-dept">🏛 内阁</div></div></div>
+
+  <!-- 议政院 -->
+  <div class="official" id="off-yizheng" style="left:120px;top:280px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">🏛 议政院</div><div class="tooltip-card"><div class="t-name">议政院大学士</div><div class="t-title">议政辅弼</div><div class="t-dept">🏛 议政院</div></div></div>
+
+  <!-- 都察院 -->
+  <div class="official" id="off-ducha" style="left:230px;top:280px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">🛡 都察院</div><div class="tooltip-card"><div class="t-name">都察院</div><div class="t-title">纠弹百官</div><div class="t-dept">🛡 都察院</div></div></div>
+
+  <!-- 翰林院 -->
+  <div class="official" id="off-hanlin" style="left:340px;top:280px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">📚 翰林院</div><div class="tooltip-card"><div class="t-name">翰林院大学士</div><div class="t-title">典章制度</div><div class="t-dept">📚 翰林院</div></div></div>
+
+  <!-- 内廷掌印 -->
+  <div class="official" id="off-neiting" style="right:230px;top:160px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">⚫ 内廷掌印</div><div class="tooltip-card"><div class="t-name">内廷掌印</div><div class="t-title">内廷总负责人</div><div class="t-dept">⚫ 内廷</div></div></div>
+
+  <!-- 锦衣卫 -->
+  <div class="official" id="off-jinwei" style="right:340px;top:280px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">🛠 锦衣卫</div><div class="tooltip-card"><div class="t-name">锦衣卫指挥</div><div class="t-title">缉事记律</div><div class="t-dept">🛠 锦衣卫</div></div></div>
+
+  <!-- 通政司 -->
+  <div class="official" id="off-tongzheng" style="right:230px;top:280px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">📋 通政司</div><div class="tooltip-card"><div class="t-name">通政司</div><div class="t-title">章奏部经</div><div class="t-dept">📋 通政司</div></div></div>
+
+  <!-- 钦天监 -->
+  <div class="official" id="off-qintian" style="right:120px;top:280px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">🔥 钦天监</div><div class="tooltip-card"><div class="t-name">钦天监监正</div><div class="t-title">观星洞世</div><div class="t-dept">🔥 钦天监</div></div></div>
+
+  <!-- 六部尚书令 -->
+  <div class="official" id="off-liubushangling" style="left:50%;transform:translateX(-50%);top:400px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">⚔ 六部尚书令</div><div class="tooltip-card"><div class="t-name">六部尚书令</div><div class="t-title">六部总负责人</div><div class="t-dept">⚔ 六部</div></div></div>
+
+  <!-- 六部 -->
+  <div class="official" id="off-libu" style="left:80px;top:520px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">📜 吏部</div><div class="tooltip-card"><div class="t-name">吏部尚书</div><div class="t-title">人事考核</div><div class="t-dept">📜 吏部</div></div></div>
+  <div class="official" id="off-hubu" style="left:230px;top:520px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">💰 户部</div><div class="tooltip-card"><div class="t-name">户部尚书</div><div class="t-title">财务户籍</div><div class="t-dept">💰 户部</div></div></div>
+  <div class="official" id="off-libub" style="left:380px;top:520px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">🎴 礼部</div><div class="tooltip-card"><div class="t-name">礼部尚书</div><div class="t-title">礼仪外交</div><div class="t-dept">🎴 礼部</div></div></div>
+  <div class="official" id="off-bingbu" style="right:380px;top:520px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">⚔ 兵部</div><div class="tooltip-card"><div class="t-name">兵部尚书</div><div class="t-title">军政武备</div><div class="t-dept">⚔ 兵部</div></div></div>
+  <div class="official" id="off-xingbu" style="right:230px;top:520px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">⚖ 刑部</div><div class="tooltip-card"><div class="t-name">刑部尚书</div><div class="t-title">司法刑狱</div><div class="t-dept">⚖ 刑部</div></div></div>
+  <div class="official" id="off-gongbu" style="right:80px;top:520px"><canvas class="char-canvas" width="40" height="56"></canvas><div class="bubble">🏗 工部</div><div class="tooltip-card"><div class="t-name">工部尚书</div><div class="t-title">工程营造</div><div class="t-dept">🏗 工部</div></div></div>
+</div>
+
+<div id="bottom-panels">
+  <div class="panel"><div class="panel-header">📜 六部职志</div><div class="panel-body" id="ministry-list"><div class="m-ministry"><span class="m-icon">📜</span><span class="m-name">吏部</span><span class="m-official">吏部尚书</span></div><div class="m-ministry"><span class="m-icon">💰</span><span class="m-name">户部</span><span class="m-official">户部尚书</span></div><div class="m-ministry"><span class="m-icon">🎴</span><span class="m-name">礼部</span><span class="m-official">礼部尚书</span></div><div class="m-ministry"><span class="m-icon">⚔</span><span class="m-name">兵部</span><span class="m-official">兵部尚书</span></div><div class="m-ministry"><span class="m-icon">⚖</span><span class="m-name">刑部</span><span class="m-official">刑部尚书</span></div><div class="m-ministry"><span class="m-icon">🏗</span><span class="m-name">工部</span><span class="m-official">工部尚书</span></div></div></div>
+  <div class="panel"><div class="panel-header">🏛 内阁·内廷</div><div class="panel-body" id="council-list"><div class="m-ministry"><span class="m-icon">⏳</span><span class="m-name">内阁首辅</span><span class="m-official">总负责</span></div><div class="m-ministry"><span class="m-icon">🏛</span><span class="m-name">议政院</span><span class="m-official">议政卿</span></div><div class="m-ministry"><span class="m-icon">🛡</span><span class="m-name">都察院</span><span class="m-official">监察卿</span></div><div class="m-ministry"><span class="m-icon">📚</span><span class="m-name">翰林院</span><span class="m-official">文翰卿</span></div><div class="m-ministry"><span class="m-icon">⚫</span><span class="m-name">内廷掌印</span><span class="m-official">总负责</span></div><div class="m-ministry"><span class="m-icon">🛠</span><span class="m-name">锦衣卫</span><span class="m-official">镇抚使</span></div><div class="m-ministry"><span class="m-icon">📋</span><span class="m-name">通政司</span><span class="m-official">通政使</span></div><div class="m-ministry"><span class="m-icon">🔥</span><span class="m-name">钦天监</span><span class="m-official">观星使</span></div></div></div>
+  <div class="panel"><div class="panel-header">⚔ 陛下旨意</div><div class="panel-body" id="cmd-list"><div class="cmd-item"><div class="cmd-dot"></div><div class="cmd-time">—</div><div class="cmd-text">暂无旨意下达</div></div></div></div>
+  <div class="panel"><div class="panel-header">🖥 系统状况</div><div class="panel-body"><div class="sys-stat"><span class="label">CPU</span><span class="value" id="s-cpu">—</span><div class="bar-wrap"><div class="bar" id="b-cpu" style="width:0%"></div></div></div><div class="sys-stat"><span class="label">内存</span><span class="value" id="s-mem">—</span><div class="bar-wrap"><div class="bar" id="b-mem" style="width:0%"></div></div></div><div class="sys-stat"><span class="label">磁盘</span><span class="value" id="s-disk">—</span><div class="bar-wrap"><div class="bar" id="b-disk" style="width:0%"></div></div></div><div class="sys-stat"><span class="label">运行</span><span class="value" id="s-uptime">—</span></div></div></div>
+</div>
+
+<script>
+var canvas=document.getElementById("palace-canvas");var ctx=canvas.getContext("2d");var W=1280,H=700;
+var MC={emperor:"#ffd700",mingwang:"#888888",neige:"#ffaa33",yizheng:"#ffaa33",ducha:"#aa66ff",hanlin:"#44aaff",neiting:"#ff4444",jinwei:"#ff4444",tongzheng:"#66ccff",qintian:"#cc66ff",liubushangling:"#9933ff",libu:"#ffaa66",hubu:"#66ff88",libub:"#aa66ff",bingbu:"#ff6666",xingbu:"#ff88aa",gongbu:"#aaff66"};
+var MCH={emperor:"帝",mingwang:"尊",neige:"首",yizheng:"卿",ducha:"卿",hanlin:"卿",neiting:"掌",jinwei:"指",tongzheng:"使",qintian:"监",liubushangling:"令",libu:"尚",hubu:"尚",libub:"尚",bingbu:"尚",xingbu:"尚",gongbu:"尚"};
+var MIDS=["emperor","mingwang","neige","yizheng","ducha","hanlin","neiting","jinwei","tongzheng","qintian","liubushangling","libu","hubu","libub","bingbu","xingbu","gongbu"];var aT=0;
+function drawBackground(){ctx.clearRect(0,0,W,H);var sk=ctx.createLinearGradient(0,0,0,H);sk.addColorStop(0,"#04040e");sk.addColorStop(0.5,"#080616");sk.addColorStop(1,"#0e0818");ctx.fillStyle=sk;ctx.fillRect(0,0,W,H);ctx.fillStyle="#1a0e0a";ctx.fillRect(0,15,W,28);for(var x=50;x<W;x+=70){ctx.fillStyle="#241208";ctx.fillRect(x,15,36,28);}var fl=ctx.createLinearGradient(0,H*0.58,0,H);fl.addColorStop(0,"#140e1c");fl.addColorStop(1,"#080610");ctx.fillStyle=fl;ctx.fillRect(0,H*0.58,W,H*0.42);ctx.fillStyle="#1e1630";ctx.fillRect(W*0.38,H*0.58,W*0.24,H*0.42);}
+function drawDragonThrone(){var cx=W/2,cy=H*0.20;ctx.fillStyle="#2a1200";ctx.fillRect(cx-50,cy-60,100,80);ctx.fillStyle="#3a1a00";ctx.fillRect(cx-45,cy-75,90,25);ctx.fillStyle="#4a2200";ctx.fillRect(cx-40,cy-80,80,15);ctx.fillStyle="rgba(220,180,40,0.6)";for(var i=0;i<8;i++){ctx.fillRect(cx-30+i*8,cy-72+(i%2)*4,6,4);}ctx.fillStyle="#ffd700";ctx.fillRect(cx-5,cy-76,4,4);ctx.fillRect(cx+1,cy-76,4,4);ctx.fillStyle="#3a1a00";ctx.fillRect(cx-60,cy-30,16,40);ctx.fillRect(cx+44,cy-30,16,40);ctx.fillStyle="#5a0000";ctx.fillRect(cx-40,cy-10,80,25);ctx.fillStyle="#7a1010";ctx.fillRect(cx-36,cy-8,72,20);ctx.fillStyle="#2a1200";ctx.fillRect(cx-55,cy+15,110,15);var gA=0.05+0.03*Math.sin(aT*1.2);ctx.fillStyle="rgba(255,200,40,"+gA+")";ctx.beginPath();ctx.ellipse(cx,cy-20,80,50,0,0,Math.PI*2);ctx.fill();}
+function drawLanterns(){var ps=[[160,80],[500,70],[W/2,60],[780,70],[1120,80]];ps.forEach(function(p,i){var col=i%2===0?"#cc4400":"#aa3300";ctx.strokeStyle="rgba(100,80,20,0.6)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p[0],0);ctx.lineTo(p[0],p[1]-10);ctx.stroke();var fl=1+0.08*Math.sin(aT*3+i)+0.04*Math.sin(aT*7+i*2);ctx.fillStyle=col;ctx.globalAlpha=0.3*fl;ctx.beginPath();ctx.ellipse(p[0],p[1],12,8,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle=col;ctx.fillRect(p[0]-8,p[1]-8,16,14);ctx.fillStyle="rgba(255,200,100,0.8)";ctx.fillRect(p[0]-6,p[1]-6,12,10);ctx.fillStyle="rgba(255,150,50,"+(0.15*fl)+")";ctx.beginPath();ctx.ellipse(p[0],p[1],20,15,0,0,Math.PI*2);ctx.fill();});}
+function drawCharacters(){MIDS.forEach(function(d,i){var el=document.getElementById("off-"+d);if(!el)return;var cc=el.querySelector(".char-canvas");if(!cc)return;var cctx=cc.getContext("2d");var col=MC[d];var bob=Math.sin(aT*2+i)*1.5;cctx.clearRect(0,0,cc.width,cc.height);cctx.fillStyle=col;cctx.fillRect(8,4+bob,24,10);cctx.fillRect(6,8+bob,28,4);cctx.fillStyle="#FFCC99";cctx.fillRect(10,12+bob,20,14);cctx.fillStyle="#000";cctx.fillRect(13,16+bob,3,3);cctx.fillRect(20,16+bob,3,3);cctx.fillStyle=col;cctx.fillRect(8,26+bob,24,20);cctx.fillRect(0,28+bob,8,12);cctx.fillRect(32,28+bob,8,12);cctx.fillStyle="#444444";cctx.fillRect(10,46+bob,20,8);cctx.fillStyle="#FFD700";cctx.font="bold 8px monospace";cctx.textAlign="center";cctx.fillText(MCH[d],20,60+bob);});}
+function fmtU(s){var h=Math.floor(s/3600);return h+"h "+Math.floor((s%3600)/60)+"m";}
+function updCk(){var now=new Date();document.getElementById("clock").textContent=now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");}
+function updSS(){fetch("/api/status").then(function(r){return r.json();}).then(function(data){document.getElementById("s-cpu").textContent=data.loadavg?data.loadavg[0].toFixed(2):"—";document.getElementById("b-cpu").style.width=Math.min(100,data.loadavg?data.loadavg[0]*20:0)+"%";document.getElementById("s-mem").textContent=data.memory?data.memory.percent+"%":"—";document.getElementById("b-mem").style.width=data.memory?data.memory.percent+"%":"0%";document.getElementById("s-disk").textContent=data.disk?data.disk.percent+"%":"—";document.getElementById("b-disk").style.width=data.disk?Math.min(100,data.disk.percent)+"%":"0%";document.getElementById("s-uptime").textContent=data.uptime?fmtU(data.uptime):"—";}).catch(function(){});}
+function updCm(){fetch("/api/commands").then(function(r){return r.json();}).then(function(data){var list=document.getElementById("cmd-list");if(!data.commands||data.commands.length===0)return;list.innerHTML=data.commands.slice(0,8).map(function(c){var t=new Date(c.ts);var time=t.getHours()+":"+t.getMinutes().toString().padStart(2,"0");var cls=c.status==="sent"?"sent":c.status==="failed"?"failed":"";var text=c.command.length>30?c.command.substring(0,30)+"...":c.command;return'<div class="cmd-item '+cls+'"><div class="cmd-dot"></div><div class="cmd-time">'+time+'</div><div class="cmd-text">'+text+'</div></div>';}).join("");}).catch(function(){});}
+function loop(ts){aT=ts/1000;drawBackground();drawDragonThrone();drawLanterns();drawCharacters();requestAnimationFrame(loop);}
+requestAnimationFrame(loop);updCk();updSS();updCm();setInterval(updSS,15000);setInterval(updCm,8000);
+</script>
+</body>
+</html>
