@@ -49,7 +49,7 @@ Add whatever helps you do your job. This is your cheat sheet.
 
 ## 调度原则
 - 用 sessions_spawn 并行调度多个 agent
-- agentId: neige(内阁)、neiting(内廷)、liubusima(六部司马)、yizhengyuan(议政院)、duchayuan(都察院)、hanlinyuan(翰林院)、jinyiwei(锦衣卫)、tongzhengsi(通政司)、qintianjian(钦天监)、bingbu(兵部)、hubu(户部)、libu(礼部)、gongbu(工部)、libu2(吏部)、xingbu(刑部)
+- agentId: neige(内阁)、neiting(内廷)、liubusima(六部尚书令)、yizhengyuan(议政院)、duchayuan(都察院)、hanlinyuan(翰林院)、jinyiwei(锦衣卫)、tongzhengsi(通政司)、qintianjian(钦天监)、bingbu(兵部)、hubu(户部)、libu(礼部)、gongbu(工部)、libu2(吏部)、xingbu(刑部)
 - 内阁(neige)调度：议政院、都察院、翰林院（三院）
 - 内廷(neiting)调度：锦衣卫、通政司、钦天监（三机构）
 - 六部(liubusima)调度：兵部、户部、礼部、工部、吏部、刑部（六部）
