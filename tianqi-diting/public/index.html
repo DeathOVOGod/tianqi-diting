@@ -1515,7 +1515,15 @@
         case 'oracle': loadOracleData(); break;
         case 'logs': loadLogsData(); break;
         case 'court': loadCourtData(); break;
-        case 'shengting': resizeQianqingIframe(); break;
+        case 'shengting': 
+          const sf = document.getElementById('shengting-frame');
+          if (sf) {
+            // 强制重新加载iframe内容，解决首次进入白屏问题
+            const curSrc = sf.src;
+            sf.src = '';
+            setTimeout(() => { sf.src = curSrc; }, 50);
+          }
+          break;
       }
     }
 
