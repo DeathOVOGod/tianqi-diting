@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>天启帝庭 - 监控系统</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <style>
     :root {
       --bg-primary: #0a0a0f;
@@ -468,8 +468,8 @@
       </div>
       <!-- 第二行：导航链接 -->
       <div class="nav-links">
-        <a href="#" class="nav-link" data-page="shengting">🏯 圣庭</a>
-        <a href="#" class="nav-link active" data-page="home">⚖️ 阴阳两极</a>
+        <a href="#" class="nav-link active" data-page="shengting">🏯 圣庭</a>
+        <a href="#" class="nav-link" data-page="home">⚖️ 阴阳两极</a>
         <a href="#" class="nav-link" data-page="cabinet">📜 内阁</a>
         <a href="#" class="nav-link" data-page="inner">🏛️ 内廷</a>
         <a href="#" class="nav-link" data-page="ministries">📋 六部尚书堂</a>
@@ -480,7 +480,7 @@
     </nav>
 
     <!-- 阴阳两极 -->
-    <div id="page-home" class="page active">
+    <div id="page-home" class="page">
       <h1 class="page-title home-title">阴阳两极</h1>
       <div class="card-grid home-grid">
         <div class="card hero-card home-hero">
@@ -786,7 +786,7 @@
     </div>
 
     <!-- 圣庭（iframe嵌入） -->
-    <div id="page-shengting" class="page">
+    <div id="page-shengting" class="page active">
       <h1 class="page-title">🏯 圣庭</h1>
       <div style="width:100%;border:1px solid var(--border-gold);border-radius:12px;overflow:hidden;background:var(--bg-card);">
         <iframe id="shengting-frame" src="/shengting" style="width:100%;min-height:700px;border:none;display:block;" onload="onShengtingLoad()" onerror="onShengtingError()"></iframe>
@@ -966,7 +966,7 @@
 
       // 更新图表数据
       if (status) {
-        const cpuPct = parseFloat(status.cpuPercent || 0);
+        const cpuPct = (status.loadavg && status.cpuCount) ? (status.loadavg[0] / status.cpuCount) * 100 : parseFloat(status.cpuPercent || 0);
         const memPct = parseFloat(status.memory?.percent || 0);
 
         cpuData.push(cpuPct);

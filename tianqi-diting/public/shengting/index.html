@@ -6,7 +6,7 @@
 <title>天启帝庭 · 圣庭</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#050508;display:flex;flex-direction:column;align-items:center;min-height:100vh;font-family:"Courier New",monospace;color:#f0e6d3}
+body{background:#050508;display:flex;flex-direction:column;align-items:center;min-height:100vh;overflow:hidden;font-family:"Courier New",monospace;color:#f0e6d3}
 :root{--gold:#ffd700;--gold-dark:#a07800;--gold-dim:#3a2a00;--panel-bg:rgba(6,6,16,0.95);--border-gold:rgba(255,215,0,0.2)}
 #banner{width:100%;max-width:1280px;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,#100818 0%,#0a0514 100%);border-bottom:2px solid var(--gold);position:relative;z-index:10}
 .banner-title{display:flex;align-items:center;gap:12px}
@@ -47,7 +47,7 @@ body{background:#050508;display:flex;flex-direction:column;align-items:center;mi
 .tooltip-card .t-dept{color:#7a8aaa;font-size:11px;font-weight:bold}
 #bottom-panels{width:1280px;max-width:100vw;display:flex;gap:10px;padding:8px 0 16px;flex-wrap:wrap;justify-content:center}
 .panel{background:var(--panel-bg);border:1px solid var(--border-gold);border-radius:5px;padding:10px 14px;min-width:300px}
-.panel-header{color:var(--gold);font-size:12px;letter-spacing:2px;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid rgba(255,215,0,0.1);display:flex;align-items:center;gap:6px}
+.panel-header{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid rgba(255,215,0,0.1);display:flex;align-items:center;gap:6px}
 .panel-body{display:flex;flex-direction:column;gap:2px;max-height:120px;overflow-y:auto}
 .panel-body::-webkit-scrollbar{width:3px}.panel-body::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
 .cmd-item{display:flex;align-items:flex-start;gap:6px;font-size:12px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
@@ -60,10 +60,10 @@ body{background:#050508;display:flex;flex-direction:column;align-items:center;mi
 .sys-stat .value{color:var(--gold);flex-shrink:0}
 .sys-stat .bar-wrap{width:60px;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;flex-shrink:0}
 .sys-stat .bar{height:100%;background:linear-gradient(90deg,#5a9a5a,var(--gold));border-radius:2px;transition:width 0.8s}
-.m-ministry{display:flex;align-items:center;gap:8px;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
-.m-ministry .m-icon{font-size:14px}
-.m-ministry .m-name{color:var(--gold);flex:1;text-align:left}
-.m-ministry .m-official{color:#8a7a6a;font-size:9px}
+.m-ministry{display:flex;align-items:center;gap:10px;font-size:14px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.m-ministry .m-icon{font-size:16px}
+.m-ministry .m-name{color:var(--gold);flex:1;text-align:left;font-size:15px}
+.m-ministry .m-official{color:#8a7a6a;font-size:12px}
 
 /* 任务联动动画 */
 @keyframes floating-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
