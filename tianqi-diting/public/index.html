@@ -480,7 +480,7 @@
     </nav>
 
     <!-- 阴阳两极 -->
-    <div id="page-home" class="page">
+    <div id="page-home" class="page active">
       <h1 class="page-title home-title">阴阳两极</h1>
       <div class="card-grid home-grid">
         <div class="card hero-card home-hero">
@@ -743,12 +743,6 @@
         <div class="card"><div class="card-title"><span class="icon">💓</span> 平台心跳汇总</div><div id="heartbeat-summary"><div class="loading">加载中...</div></div></div>
       </div>
       <div class="timestamp">最后更新: <span id="logs-updated">-</span></div>
-    </div>
-
-    <!-- 朝堂 -->
-    <div id="page-home" class="page active">
-      <div id="court-members"><div class="loading">加载中...</div></div>
-      <div class="timestamp">最后更新: <span id="court-updated">-</span></div>
     </div>
 
     <!-- 内阁 -->
@@ -1337,175 +1331,6 @@
       document.getElementById('logs-updated').textContent = formatDateTime(new Date().toISOString());
     }
 
-    async function loadCourtData() {
-      const [cron, status] = await Promise.all([
-        fetchAPI('/api/cron'), fetchAPI('/api/status')
-      ]);
-      const container = document.getElementById('court-members');
-
-      const DEPT_COLORS = {
-        silijian:   { robe: '#d4a574', hat: '#b8894d' },
-        neige:      { robe: '#dc2626', hat: '#7f1d1d' },
-        duchayuan:  { robe: '#22c55e', hat: '#15803d' },
-        // 六部各部不同色
-        libu_lishi: { robe: '#06b6d4', hat: '#0e7490' },  // 吏部-青
-        hubu:       { robe: '#eab308', hat: '#a16207' },  // 户部-金黄
-        libu_li:    { robe: '#f97316', hat: '#9a3412' },  // 礼部-橙
-        bingbu:     { robe: '#ef4444', hat: '#991b1b' },  // 兵部-红
-        xingbu:     { robe: '#8b5cf6', hat: '#6d28d9' },  // 刑部-紫
-        gongbu:     { robe: '#3b82f6', hat: '#1d4ed8' },  // 工部-蓝
-        shangshuling:  { robe: '#db2777', hat: '#9d174d' },  // 尚书令-粉
-        // 内廷
-        neiting:    { robe: '#374151', hat: '#1f2937' },  // 内廷-灰黑
-        jinyiwei:   { robe: '#111827', hat: '#000000' },  // 锦衣卫-纯黑
-        tongzhengsi:{ robe: '#0891b2', hat: '#0e7490' },  // 通政司-深青
-        qintianjian:{ robe: '#4f46e5', hat: '#3730a3' },  // 钦天监-靛蓝
-        // 内阁
-        yizhengyuan:{ robe: '#b45309', hat: '#92400e' },  // 议政院-赭
-        hanlinyuan: { robe: '#7c3aed', hat: '#5b21b6' },  // 翰林院-紫
-      };
-
-      function makePixelPerson(id, name, online, rank) {
-        const c = DEPT_COLORS[id] || { robe: '#888', hat: '#666' };
-        const scale = rank === 'emperor' ? 'scale(1.25)' : rank === 'minister' ? 'scale(1.1)' : 'scale(1)';
-        const opacity = online ? '' : 'opacity:0.3;filter:grayscale(1)';
-        return `<div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border-radius:8px;transition:all 0.3s;cursor:pointer;position:relative;${opacity}" data-id="${id}">
-          <div style="transform:${scale};transform-origin:center bottom">
-            <div style="display:flex;justify-content:center"><div style="width:32px;height:8px;border-radius:4px 4px 0 0;background:${c.hat}"></div></div>
-            <div style="display:flex;justify-content:center;margin-top:-2px"><div style="width:24px;height:4px;background:${c.hat};filter:brightness(1.2)"></div></div>
-            <div style="display:flex;justify-content:center">
-              <div style="width:28px;height:20px;border-radius:2px;position:relative;background:#fcd9b6">
-                <div style="position:absolute;top:6px;left:6px;width:4px;height:4px;border-radius:50%;background:#1a1a2e"></div>
-                <div style="position:absolute;top:6px;right:6px;width:4px;height:4px;border-radius:50%;background:#1a1a2e"></div>
-                <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:8px;height:2px;border-radius:1px;background:#d4956b"></div>
-              </div>
-            </div>
-            <div style="display:flex;justify-content:center;margin-top:-2px">
-              <div style="width:36px;height:28px;border-radius:0 0 4px 4px;position:relative;overflow:hidden;background:${c.robe}">
-                <div style="position:absolute;top:0;left:0;right:0;height:6px;background:${c.hat}"></div>
-                <div style="position:absolute;top:6px;left:50%;transform:translateX(-50%);width:2px;height:22px;background:${c.hat};opacity:0.6"></div>
-              </div>
-            </div>
-          </div>
-          <div style="position:absolute;top:4px;right:4px;width:10px;height:10px;border-radius:50%;border:2px solid #0d0d1a;${online ? 'background:#4ade80;box-shadow:0 0 6px #4ade80' : 'background:#9ca3af'}"></div>
-          <span style="font-size: 10px;line-height:1.2;text-align:center;color:#e5e5e5;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>
-        </div>`;
-      }
-
-      let html = `<style>
-        .court-wrapper{background:linear-gradient(180deg,#1a1510 0%,#12100a 50%,#0d0d1a 100%);border:1px solid var(--border-gold);border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);max-width:1600px;margin:0 auto;width:100%}
-        .court-banner{background:linear-gradient(180deg,#8b0000 0%,#6b0000 50%,#4a0000 100%);padding:20px;text-align:center;border-bottom:3px solid rgba(255,215,0,0.3);position:relative}
-        .court-banner::before,.court-banner::after{content:'';position:absolute;top:0;bottom:0;width:4px;background:linear-gradient(180deg,rgba(255,215,0,0.4) 0%,rgba(255,215,0,0.1) 100%)}
-        .court-banner::before{left:12px}.court-banner::after{right:12px}
-        .court-title{color:#ffd700;font-size: 28px;font-weight:bold;letter-spacing:8px;text-shadow:0 0 20px rgba(255,215,0,0.3),2px 2px 4px rgba(0,0,0,0.5);font-family:'Noto Serif SC',serif}
-        .court-subtitle{color:rgba(255,215,0,0.4);font-size: 10px;letter-spacing:4px;margin-top:4px}
-        .court-floor{position:relative;padding:40px 30px;background:linear-gradient(180deg,#1a1510 0%,#12100a 50%,#0d0d1a 100%)}
-        .floor-pattern{position:absolute;inset:0;opacity:0.05;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,#d4a574 39px,#d4a574 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,#d4a574 39px,#d4a574 40px);background-size:40px 40px;pointer-events:none}
-        .floor-content{position:relative}
-        .court-tier{display:flex;justify-content:center;gap:30px;margin:30px 0;flex-wrap:wrap;align-items:flex-end}
-        .tier-label{display:flex;align-items:center;justify-content:center;gap:8px;margin:25px 0 20px;font-size: 11px;letter-spacing:3px;color:rgba(212,175,55,0.5)}
-        .tier-label-line{flex:1;max-width:120px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.3),transparent)}
-        .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.2),transparent);margin:20px 60px}
-        .divider-gold{height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,0.4),transparent);margin:25px 80px}
-        .pixel-person{position:relative}
-        .court-stats{display:flex;justify-content:center;gap:40px;padding:20px;border-top:1px solid rgba(212,175,55,0.1);background:rgba(0,0,0,0.2)}
-        .stat-item{text-align:center}.stat-value{font-size: 20px;font-weight:bold;color:var(--gold);font-family:'Noto Serif SC',serif}.stat-label{font-size: 11px;color:var(--text-secondary);margin-top:2px}
-        .emperor-row{display:flex;justify-content:center;gap:30px;align-items:flex-end}
-      </style>
-
-      <div class="court-wrapper" id="court-scaler">
-        <div class="court-banner">
-          <div class="court-title">🐉 天启朝堂 🐉</div>
-          <div class="court-subtitle">IMPERIAL COURT</div>
-        </div>
-        <div class="court-floor">
-          <div class="floor-pattern"></div>
-          <div class="floor-content">
-            <div class="tier-label"><div class="tier-label-line"></div><span>👑 御座</span><div class="tier-label-line"></div></div>
-            <div class="court-tier">
-              <div style="display:inline-flex;flex-direction:column;align-items:center;gap:4px;padding:8px;cursor:default">
-                <div style="transform:scale(1.2);transform-origin:center bottom">
-                  <div style="display:flex;justify-content:center"><div style="width:40px;height:12px;border-radius:4px 4px 0 0;background:#ffd700"></div></div>
-                  <div style="display:flex;justify-content:center;margin-top:-2px"><div style="width:24px;height:6px;background:#b8860b"></div></div>
-                  <div style="display:flex;justify-content:center">
-                    <div style="width:32px;height:24px;border-radius:2px;position:relative;background:#fcd9b6">
-                      <div style="position:absolute;top:8px;left:8px;width:6px;height:6px;border-radius:50%;background:#1a1a2e"></div>
-                      <div style="position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%;background:#1a1a2e"></div>
-                      <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:12px;height:4px;border-radius:2px;background:#d4956b"></div>
-                    </div>
-                  </div>
-                  <div style="display:flex;justify-content:center;margin-top:-2px">
-                    <div style="width:44px;height:32px;border-radius:0 0 4px 4px;position:relative;overflow:hidden;background:#ffd700">
-                      <div style="position:absolute;top:0;left:0;right:0;height:8px;background:#b8860b"></div>
-                      <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:2px;height:24px;background:#b8860b;opacity:0.6"></div>
-                    </div>
-                  </div>
-                </div>
-                <span style="font-size: 10px;line-height:1.2;text-align:center;color:#ffd700;font-weight:bold">陛下</span>
-              </div>
-            </div>
-
-            <div class="divider-gold"></div>
-            <div class="court-tier">
-              <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-                <div style="transform:scale(1.15);transform-origin:center bottom">
-                  ${makePixelPerson('silijian', '帝尘·冥王', true, 'emperor')}
-                </div>
-                <span style="font-size: 12px;letter-spacing:3px;color:rgba(212,175,55,0.9);font-weight:bold;">司礼监</span>
-              </div>
-            </div>
-
-            <div class="divider"></div>
-            <!-- 第二层：内阁 + 内廷 -->
-            <div class="court-tier" style="flex-wrap:nowrap;gap:40px;justify-content:center;align-items:flex-start;">
-              <!-- 内阁 -->
-              <div style="display:flex;flex-direction:column;align-items:center;gap:10px;min-width:240px;">
-                <span style="font-size: 11px;color:rgba(212,175,55,0.7);letter-spacing:2px;">📜 内阁</span>
-                <div onclick="document.querySelector('[data-page=cabinet]').click()" style="cursor:pointer;">${makePixelPerson('neige', '内阁首辅', true, 'minister')}</div>
-                <div style="display:flex;gap:20px;margin-top:8px;">
-                  <div onclick="document.querySelector('[data-page=cabinet]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 11px;color:rgba(212,175,55,0.9);font-weight:bold;">议政院</span>${makePixelPerson('yizhengyuan', '议政卿', true, 'official')}</div>
-                  <div onclick="document.querySelector('[data-page=cabinet]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 11px;color:rgba(212,175,55,0.9);font-weight:bold;">都察院</span>${makePixelPerson('duchayuan', '监察卿', true, 'official')}</div>
-                  <div onclick="document.querySelector('[data-page=cabinet]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 11px;color:rgba(212,175,55,0.9);font-weight:bold;">翰林院</span>${makePixelPerson('hanlinyuan', '文翰卿', true, 'official')}</div>
-                </div>
-              </div>
-              <!-- 内廷 -->
-              <div style="display:flex;flex-direction:column;align-items:center;gap:10px;min-width:240px;">
-                <span style="font-size: 11px;color:rgba(212,175,55,0.7);letter-spacing:2px;">🏛️ 内廷</span>
-                <div onclick="document.querySelector('[data-page=inner]').click()" style="cursor:pointer;">${makePixelPerson('neiting', '内廷掌印', true, 'minister')}</div>
-                <div style="display:flex;gap:20px;margin-top:8px;">
-                  <div onclick="document.querySelector('[data-page=inner]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 11px;color:rgba(212,175,55,0.9);font-weight:bold;">锦衣卫</span>${makePixelPerson('jinyiwei', '镇抚使', true, 'official')}</div>
-                  <div onclick="document.querySelector('[data-page=inner]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 11px;color:rgba(212,175,55,0.9);font-weight:bold;">通政司</span>${makePixelPerson('tongzhengsi', '通政使', true, 'official')}</div>
-                  <div onclick="document.querySelector('[data-page=inner]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 11px;color:rgba(212,175,55,0.9);font-weight:bold;">钦天监</span>${makePixelPerson('qintianjian', '观星使', true, 'official')}</div>
-                </div>
-              </div>
-            </div>
-            <!-- 第三层：六部 -->
-            <div class="divider"></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin:0 auto;">
-              <span style="font-size: 11px;color:rgba(212,175,55,0.7);letter-spacing:2px;">⚙️ 六部</span>
-              <div onclick="document.querySelector('[data-page=ministries]').click()" style="cursor:pointer;">${makePixelPerson('shangshuling', '尚书令', true, 'minister')}</div>
-              <div style="display:flex;gap:20px;margin-top:8px;flex-wrap:wrap;justify-content:center;">
-                <div onclick="document.querySelector('[data-page=ministries]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 10px;color:rgba(212,175,55,0.8);">吏部</span>${makePixelPerson('libu_lishi', '尚书', true, 'official')}</div>
-                <div onclick="document.querySelector('[data-page=ministries]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 10px;color:rgba(212,175,55,0.8);">户部</span>${makePixelPerson('hubu', '尚书', true, 'official')}</div>
-                <div onclick="document.querySelector('[data-page=ministries]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 10px;color:rgba(212,175,55,0.8);">礼部</span>${makePixelPerson('libu_li', '尚书', true, 'official')}</div>
-                <div onclick="document.querySelector('[data-page=ministries]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 10px;color:rgba(212,175,55,0.8);">兵部</span>${makePixelPerson('bingbu', '尚书', true, 'official')}</div>
-                <div onclick="document.querySelector('[data-page=ministries]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 10px;color:rgba(212,175,55,0.8);">刑部</span>${makePixelPerson('xingbu', '尚书', true, 'official')}</div>
-                <div onclick="document.querySelector('[data-page=ministries]').click()" style="cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;"><span style="font-size: 10px;color:rgba(212,175,55,0.8);">工部</span>${makePixelPerson('gongbu', '尚书', true, 'official')}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="court-stats">
-          <div class="stat-item"><div class="stat-value">16</div><div class="stat-label">朝廷人数</div></div>
-          <div class="stat-item"><div class="stat-value">16</div><div class="stat-label">在线</div></div>
-          <div class="stat-item"><div class="stat-value">${status ? '正常' : '异常'}</div><div class="stat-label">服务器</div></div>
-          <div class="stat-item"><div class="stat-value">${cron && cron.jobs ? cron.jobs.length : 0}</div><div class="stat-label">Cron任务</div></div>
-        </div>
-      </div>`;
-
-      container.innerHTML = html;
-      document.getElementById('court-updated').textContent = formatDateTime(new Date().toISOString());
-    }
     function loadPageData(page) {
       switch(page) {
         case 'home': loadHomeData(); break;
@@ -1514,7 +1339,6 @@
         case 'treasury': loadTreasuryData(); break;
         case 'oracle': loadOracleData(); break;
         case 'logs': loadLogsData(); break;
-        case 'court': loadCourtData(); break;
         case 'shengting': resizeQianqingIframe(); break;
       }
     }
