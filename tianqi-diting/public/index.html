@@ -795,7 +795,7 @@
     <div id="page-shengting" class="page">
       <h1 class="page-title">🏯 圣庭</h1>
       <div style="width:100%;border:1px solid var(--border-gold);border-radius:12px;overflow:hidden;background:var(--bg-card);">
-        <iframe id="shengting-frame" src="/shengting" style="width:100%;min-height:700px;border:none;display:block;" onload="resizeQianqingIframe()"></iframe>
+        <iframe id="shengting-frame" src="/shengting" style="width:100%;min-height:700px;border:none;display:block;" onload="onShengtingLoad()" onerror="onShengtingError()"></iframe>
       </div>
     </div>
 
@@ -1515,19 +1515,33 @@
         case 'oracle': loadOracleData(); break;
         case 'logs': loadLogsData(); break;
         case 'court': loadCourtData(); break;
-        case 'shengting': 
-          const sf = document.getElementById('shengting-frame');
-          if (sf) {
-            // 强制重新加载iframe内容，解决首次进入白屏问题
-            const curSrc = sf.src;
-            sf.src = '';
-            setTimeout(() => { sf.src = curSrc; }, 50);
-          }
-          break;
+        case 'shengting': resizeQianqingIframe(); break;
       }
     }
 
     // ====== 圣庭iframe自适应 ======
+    let shengtingLoadAttempts = 0;
+    let shengtingLoaded = false;
+
+    function onShengtingLoad() {
+      shengtingLoaded = true;
+      shengtingLoadAttempts = 0;
+      resizeQianqingIframe();
+    }
+
+    function onShengtingError() {
+      // iframe加载失败，3秒后重试一次
+      if (shengtingLoadAttempts < 1) {
+        shengtingLoadAttempts++;
+        const iframe = document.getElementById('shengting-frame');
+        if (iframe) {
+          const curSrc = iframe.src;
+          iframe.src = '';
+          setTimeout(() => { iframe.src = curSrc; }, 500);
+        }
+      }
+    }
+
     function resizeQianqingIframe() {
       const iframe = document.getElementById('shengting-frame');
       if (!iframe) return;
